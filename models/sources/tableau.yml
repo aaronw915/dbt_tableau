@@ -1,0 +1,41 @@
+version: 2
+sources:
+  - name: tableau_ent_prd
+    database: das
+    schema: das_tableau_ent_prd_raw_db
+    tables:
+      - name: sites
+      - name: site_roles
+      - name: users
+      - name: system_users
+      - name: workbooks
+      - name: views
+      - name: datasources
+      - name: groups
+      - name: projects
+      - name: permissions
+      - name: projects_contents
+      - name: hist_sites
+      - name: hist_workbooks
+      - name: hist_views
+      - name: hist_datasources
+      - name: hist_users
+      - name: hist_groups
+      - name: hist_projects
+      - name: hist_flows
+      - name: historical_events
+      - name: historical_event_types
+
+  - name: tableau_ra_prd
+    database: das
+    schema: das_tableau_ra_prd_raw_db
+    tables:
+      - name: sites
+      - name: workbooks
+      - name: views
+      - name: datasources
+      - name: users
+      - name: groups
+      - name: projects
+      - name: permissions
+      - name: projects_contents

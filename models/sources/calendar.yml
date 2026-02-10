@@ -1,0 +1,69 @@
+version: 2
+
+sources:
+  - name: calendar
+    database: DAS
+    schema: DAS_HEALTHCARE_CLAIMS_RAW_DB
+    #description: "{{ doc('calendar') }}"
+
+    tables:
+      - name: calendar
+        description: >
+          One row per calendar date with calendar-year, fiscal-year, week, month,
+          and day attributes. Used for all time-based joins in analytics and
+          reporting.
+
+        columns:
+          - name: date
+            description: Calendar date (primary key).
+            tests:
+              - not_null
+              - unique
+
+          - name: calendar_year
+            description: Calendar year (CY).
+
+          - name: longmonth
+            description: Full month name (e.g., January).
+
+          - name: month_abbrev
+            description: Abbreviated month name (e.g., Jan).
+
+          - name: cy_week
+            description: Calendar week number.
+
+          - name: cy_day_of_year
+            description: Day number within the calendar year.
+
+          - name: cy_day_of_week
+            description: Day of week number (0=Monday).
+
+          - name: day_name
+            description: Full weekday name.
+
+          - name: day_abbrev
+            description: Abbreviated weekday name.
+
+          - name: fiscal_year
+            description: Fiscal year aligned to enterprise reporting calendar.
+
+          - name: fy_quarter
+            description: Fiscal quarter label (e.g., FY2026-Q2).
+
+          - name: fy_month
+            description: Fiscal month number.
+
+          - name: fy_and_month
+            description: Fiscal year and month label.
+
+          - name: cy_and_month_sort
+            description: Sortable calendar year-month key (YYYYMM).
+
+          - name: is_weekend
+            description: Indicates whether the date falls on a weekend.
+
+          - name: is_leap_year
+            description: Indicates whether the calendar year is a leap year.
+
+          - name: load_date
+            description: Timestamp when the calendar row was loaded.

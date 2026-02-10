@@ -1,0 +1,33 @@
+name: 'tableau'
+version: '1.0.0'
+profile: 'tableau'
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  tableau:
+    +materialized: view
+
+    staging:
+      +materialized: view
+
+    marts:
+      +materialized: view
+
+seeds:
+  tableau:
+    +quote_columns: false
+
+    tableau_site_agency:
+      +column_types:
+        site_id: integer
+        site_agency_acronym: varchar(10)

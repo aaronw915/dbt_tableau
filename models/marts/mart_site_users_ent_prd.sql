@@ -1,0 +1,1 @@
+select * from {{ref('int_site_users_details_ent_prd')}}

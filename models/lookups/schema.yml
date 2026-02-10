@@ -1,0 +1,19 @@
+version: 2
+
+seeds:
+  - name: tableau_site_agency
+    description: >
+      Static lookup table mapping Tableau site_id values to
+      agency acronyms. This replaces legacy CASE logic and
+      serves as the authoritative mapping for Tableau reporting.
+    columns:
+      - name: site_id
+        description: Tableau site identifier.
+        tests:
+          - unique
+          - not_null
+
+      - name: site_agency_acronym
+        description: Agency acronym associated with the Tableau site.
+        tests:
+          - not_null
