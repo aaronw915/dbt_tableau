@@ -4,8 +4,8 @@ with base as (
         sites.site_id,
         sites.site_name,
         u.site_role_id,
+        u.hist_user_id,
         sr.display_name as site_role_name,
-
         su.system_user_id,
         su.system_user_name,
         su.display_name as system_user_display_name,
@@ -21,8 +21,7 @@ with base as (
         on sites.site_id = u.site_id
     join {{ ref('stg_site_roles') }} sr
         on sr.role_id = u.site_role_id
-
-    where su.system_user_id not in (1, 233)
+    where su.system_user_id not in (1)
 
 ),
 

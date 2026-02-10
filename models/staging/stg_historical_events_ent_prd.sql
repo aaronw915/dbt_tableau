@@ -1,9 +1,13 @@
-WITH source AS (
+WITH source1 AS (
     SELECT *
     FROM {{ source('tableau_ent_prd', 'historical_events') }}
 ),
+source2 as (
+    SELECT *
+    FROM {{ source('tableau_ent_prd', 'historical_event_types') }}
+),
 
-renamed AS (
+renamed1 AS (
     SELECT
         id AS hist_event_id,
         historical_event_type_id,
@@ -22,7 +26,38 @@ renamed AS (
         hist_group_id,
         hist_flow_id,
         pipeline_start_date
-    FROM source
+    FROM source1
+),
+rename2 as (
+    select
+        type_id AS hist_event_type_id,
+        name AS hist_event_name,
+        action_type AS hist_event_action_type,
+    from source2
+),
+joined_sources as (
+    select
+        r1.hist_event_id,
+        r1.historical_event_type_id,
+        r2.hist_event_name,
+        r2.hist_event_action_type,
+        r1.hist_event_created_at,
+        r1.hist_actor_user_id,
+        r1.hist_target_user_id,
+        r1.hist_actor_site_id,
+        r1.hist_target_site_id,
+        r1.hist_project_id,
+        r1.hist_workbook_id,
+        r1.hist_view_id,
+        r1.hist_datasource_id,
+        r1.hist_data_connection_id,
+        r1.hist_comment_id,
+        r1.hist_tag_id,
+        r1.hist_group_id,
+        r1.hist_flow_id,
+        r1.pipeline_start_date
+    from renamed1 r1
+    left join rename2 r2
+        on r1.historical_event_type_id = r2.hist_event_type_id
 )
-
-SELECT * FROM renamed
+SELECT * FROM joined_sources
