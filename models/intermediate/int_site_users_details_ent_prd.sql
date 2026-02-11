@@ -1,70 +1,70 @@
-with base as (
+WITH base AS (
 
-    select
+    SELECT
         sites.site_id,
         sites.site_name,
         u.site_role_id,
         u.hist_user_id,
-        sr.display_name as site_role_name,
+        sr.display_name AS site_role_name,
         su.system_user_id,
         su.system_user_name,
-        su.display_name as system_user_display_name,
+        su.display_name AS system_user_display_name,
         su.system_user_created_at,
         u.site_user_id,
         u.login_at,
         u.site_user_created_at
 
-    from {{ ref('stg_system_users_ent_prd') }} su
-    join {{ ref('stg_users_ent_prd') }} u
-        on su.system_user_id = u.system_user_id
-    join {{ ref('stg_sites_ent_prd') }} sites
-        on sites.site_id = u.site_id
-    join {{ ref('stg_site_roles') }} sr
-        on sr.role_id = u.site_role_id
-    where su.system_user_id not in (1)
+    FROM {{ ref('stg_system_users_ent_prd') }} su
+    JOIN {{ ref('stg_users_ent_prd') }} u
+        ON su.system_user_id = u.system_user_id
+    JOIN {{ ref('stg_sites_ent_prd') }} sites
+        ON sites.site_id = u.site_id
+    JOIN {{ ref('stg_site_roles') }} sr
+        ON sr.role_id = u.site_role_id
+    WHERE su.system_user_id NOT IN (1)
 
 ),
 
-metrics as (
+metrics AS (
 
-    select
+    SELECT
         *,
 
-        case
-            when login_at is null then null
-            else datediff(day, login_at, current_timestamp)
-        end as days_since_login,
+        CASE
+            WHEN login_at IS null THEN null
+            ELSE datediff(DAY, login_at, current_timestamp)
+        END AS days_since_login,
 
-        datediff(day, site_user_created_at, current_timestamp)
-            as days_since_created
+        datediff(DAY, site_user_created_at, current_timestamp)
+            AS days_since_created
 
-    from base
+    FROM base
 
 )
 
-select
+SELECT
     *,
 
-    case
-        when days_since_login is null then 'Never'
-        when days_since_login <= 7 then '0-7'
-        when days_since_login <= 30 then '8-30'
-        when days_since_login <= 90 then '31-90'
-        when days_since_login <= 180 then '91-180'
-        when days_since_login <= 270 then '181-270'
-        when days_since_login <= 365 then '271-365'
-        else 'Over 365 days'
-    end as login_recency_bucket,
+    CASE
+        WHEN days_since_login IS null THEN 'Never'
+        WHEN days_since_login <= 7 THEN '0-7'
+        WHEN days_since_login <= 30 THEN '8-30'
+        WHEN days_since_login <= 90 THEN '31-90'
+        WHEN days_since_login <= 180 THEN '91-180'
+        WHEN days_since_login <= 270 THEN '181-270'
+        WHEN days_since_login <= 365 THEN '271-365'
+        ELSE 'Over 365 days'
+    END AS login_recency_bucket,
 
-    case
-        when days_since_login is null then -1
-        when days_since_login <= 7 then 1
-        when days_since_login <= 30 then 2
-        when days_since_login <= 90 then 3
-        when days_since_login <= 180 then 4
-        when days_since_login <= 270 then 5
-        when days_since_login <= 365 then 6
-        else 7
-    end as login_recency_bucket_id
+    CASE
+        WHEN days_since_login IS null THEN -1
+        WHEN days_since_login <= 7 THEN 1
+        WHEN days_since_login <= 30 THEN 2
+        WHEN days_since_login <= 90 THEN 3
+        WHEN days_since_login <= 180 THEN 4
+        WHEN days_since_login <= 270 THEN 5
+        WHEN days_since_login <= 365 THEN 6
+        ELSE 7
+    END AS login_recency_bucket_id
 
-from metrics
+FROM metrics
