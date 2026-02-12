@@ -1,0 +1,20 @@
+name: Test GitHub Actions
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test-runner:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Print environment info
+        run: |
+          echo "GitHub Actions is working"
+          python --version
+          echo "Branch: $GITHUB_REF"
