@@ -10,6 +10,7 @@ sources:
       - name: system_users
       - name: workbooks
       - name: views
+      - name: views_stats
       - name: datasources
       - name: groups
       - name: projects
@@ -25,6 +26,7 @@ sources:
       - name: hist_flows
       - name: historical_events
       - name: historical_event_types
+      - name: flows
 
   - name: tableau_ra_prd
     database: das

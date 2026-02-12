@@ -1,12 +1,8 @@
-WITH source1 AS (
+WITH source AS (
     SELECT * FROM {{ source('tableau_ent_prd', 'datasources') }}
-),
-
-source2 AS (
-    SELECT * FROM {{ source('tableau_ent_prd', 'hist_datasources') }}
-),
-
-renamed1 AS (
+)
+,
+renamed AS (
     SELECT
         id AS datasource_id,
         name AS datasource_name,
@@ -32,23 +28,6 @@ renamed1 AS (
         luid AS datasource_luid,
         tds_luid,
         pipeline_start_date
-    FROM source1
-),
-
-renamed2 AS (
-    SELECT
-        id AS hist_datasource_id,
-        datasource_id
-    FROM source2
-),
-
-joined AS (
-    SELECT
-        renamed1.*,
-        renamed2.hist_datasource_id
-    FROM renamed1
-    LEFT JOIN renamed2
-        ON renamed1.datasource_id = renamed2.datasource_id
+    FROM source
 )
-
-SELECT * FROM joined
+select * from renamed

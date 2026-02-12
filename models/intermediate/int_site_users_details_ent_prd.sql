@@ -3,8 +3,6 @@ WITH base AS (
     SELECT
         sites.site_id,
         sites.site_name,
-        u.site_role_id,
-        u.hist_user_id,
         sr.display_name AS site_role_name,
         su.system_user_id,
         su.system_user_name,

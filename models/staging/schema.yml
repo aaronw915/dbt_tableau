@@ -1,0 +1,69 @@
+models:
+  - name: stg_datasources_ent_prd
+    columns:
+      - name: datasource_id
+        description: Primary key for the record.
+        data_type: number
+        data_tests:
+          - not_null
+          - unique
+      - name: datasource_name
+        description: The name of the published datasource.
+        data_type: varchar
+        data_tests:
+          - not_null
+      - name: datasource_created_at
+        description: When this record was created.
+        data_type: timestamp_ntz
+      - name: datasource_updated_at
+        description: When this record was last updated.
+        data_type: timestamp_ntz
+      - name: datasource_owner_id
+        description: The user ID of the owner/uploader of the datasource.
+        data_type: number
+      - name: datasource_size
+        description: The size in bytes of the datasource.
+        data_type: number
+      - name: datasource_project_id
+        description: The associated project ID where the datasource was published.
+        data_type: number
+      - name: refreshable_extracts
+        data_type: boolean
+      - name: datasource_extracts_refreshed_at
+        data_type: timestamp_ntz
+      - name: connectable
+        data_type: boolean
+      - name: parent_workbook_id
+        description: Is set to null for published datasources or else references the workbook id that contains this datasource.
+        data_type: number
+      - name: datasource_site_id
+        description: A foreign key reference to the site with which this datasource is associated.
+        data_type: number
+      - name: datasource_revision
+        data_type: varchar
+      - name: datasource_first_published_at
+        data_type: timestamp_ntz
+      - name: datasource_last_published_at
+        data_type: timestamp_ntz
+      - name: modified_by_user_id
+        data_type: number
+      - name: is_certified
+        data_type: boolean
+      - name: certification_note
+        data_type: varchar
+      - name: certifier_user_id
+        data_type: number
+      - name: certifier_details
+        data_type: varchar
+      - name: db_class
+        description: The origin of the data. It's often a database, but the concept is a bit more general than that. For example, "oracle" and "db2" are possibilities, but so are "excel" and "dataengine" (and many more).
+        data_type: varchar
+      - name: datasource_luid
+        description: Unique identifier.
+        data_type: varchar
+      - name: tds_luid
+        data_type: varchar
+      - name: pipeline_start_date
+        data_type: timestamp_ntz
+      - name: hist_datasource_id
+        data_type: number

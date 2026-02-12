@@ -7,7 +7,10 @@ source2 AS (
     SELECT *
     FROM {{ source('tableau_ent_prd', 'hist_users') }}
 ),
-
+source3 AS (
+    SELECT *
+    FROM {{ ref( 'stg_system_users_ent_prd') }}
+),
 renamed1 AS (
     SELECT
         id AS site_user_id,
@@ -36,6 +39,7 @@ joined_sources AS (
         r1.login_at,
         r1.site_id,
         r1.system_user_id,
+        r3.display_name,
         r1.user_luid,
         r1.site_role_id,
         r1.site_user_created_at,
@@ -52,6 +56,8 @@ joined_sources AS (
             r2.site_user_id IS NULL
             AND r1.system_user_id = r2.system_user_id
         )
+        LEFT JOIN source3 r3
+        ON r1.system_user_id = r3.system_user_id
 )
 
 SELECT * FROM joined_sources
