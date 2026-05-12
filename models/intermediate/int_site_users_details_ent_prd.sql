@@ -6,7 +6,10 @@ WITH base AS (
         sr.display_name AS site_role_name,
         su.system_user_id,
         su.system_user_name,
-        su.display_name AS system_user_display_name,
+        case su.system_user_id 
+        when 1 then 'System' 
+        when 2 then 'Guest'
+        else su.display_name end AS system_user_display_name,
         su.system_user_created_at,
         u.site_user_id,
         u.login_at,
@@ -19,7 +22,6 @@ WITH base AS (
         ON sites.site_id = u.site_id
     JOIN {{ ref('stg_site_roles') }} sr
         ON sr.role_id = u.site_role_id
-    WHERE su.system_user_id NOT IN (1)
 
 ),
 

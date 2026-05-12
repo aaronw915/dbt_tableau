@@ -5,6 +5,7 @@ WITH source1 AS (
 source2 AS (
     SELECT * FROM {{ source('tableau_ent_prd', 'hist_datasources') }}
 ),
+
 renamed1 AS (
     SELECT
         id AS datasource_id,
@@ -33,17 +34,19 @@ renamed1 AS (
         pipeline_start_date
     FROM source1
 ),
+
 renamed2 AS (
     SELECT
         id AS hist_datasource_id,
         datasource_id
     FROM source2
 ),
+
 joined AS (
     SELECT
         r1.datasource_id,
         r1.datasource_name,
-        r1.datasource_created_at,   
+        r1.datasource_created_at,
         r1.datasource_updated_at,
         r1.datasource_owner_id,
         r1.datasource_size,
@@ -64,10 +67,11 @@ joined AS (
         r1.db_class,
         r1.datasource_luid,
         r1.tds_luid,
-        r1.pipeline_start_date, 
+        r1.pipeline_start_date,
         r2.hist_datasource_id
     FROM renamed1 AS r1
     LEFT JOIN renamed2 AS r2
-    ON r1.datasource_id = r2.datasource_id
+        ON r1.datasource_id = r2.datasource_id
 )
-select * from joined
+
+SELECT * FROM joined

@@ -1,30 +1,30 @@
-with workbooks as (
-    select
-        *
-    from
+WITH workbooks AS (
+    SELECT *
+    FROM
         {{ ref('stg_workbooks_ent_prd') }}
 ),
-views as (
-    select
-        *
-    from
+
+views AS (
+    SELECT *
+    FROM
         {{ ref('stg_views_ent_prd') }}
 ),
-views_stats as (
-    select
-        *
-    from
+
+views_stats AS (
+    SELECT *
+    FROM
         {{ ref('stg_views_stats_ent_prd') }}
 ),
-viewer_info as (
-    select
-        *
-    from
+
+viewer_info AS (
+    SELECT *
+    FROM
         {{ ref('int_site_users_details_ent_prd') }}
 ),
-joined as (
-    select
-    wb.workbook_site_id,
+
+joined AS (
+    SELECT
+        wb.workbook_site_id,
         wb.workbook_id,
         wb.workbook_name,
         vs.view_stats_id,
@@ -36,15 +36,15 @@ joined as (
         vi.system_user_display_name,
         vs.user_id_last_viewed_at,
         vs.total_views,
-        coalesce(vs.device_type, 'blank') as device_type
-    from
+        coalesce(vs.device_type, 'blank') AS device_type
+    FROM
         workbooks wb
-        join views v on wb.workbook_id = v.workbook_id
-        join views_stats vs on v.view_id = vs.view_id
-        left join viewer_info vi on vs.user_id = vi.site_user_id
-        order by vs.user_id_last_viewed_at desc
+    JOIN views v ON wb.workbook_id = v.workbook_id
+    JOIN views_stats vs ON v.view_id = vs.view_id
+    LEFT JOIN viewer_info vi ON vs.user_id = vi.site_user_id
+    ORDER BY vs.user_id_last_viewed_at DESC
 )
-select
-    *
-from
+
+SELECT *
+FROM
     joined

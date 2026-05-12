@@ -1,22 +1,24 @@
-WITH source1 AS (
+WITH source_events AS (
     SELECT *
     FROM {{ source('tableau_ent_prd', 'historical_events') }}
 ),
 
-source2 AS (
+source_event_types AS (
     SELECT *
     FROM {{ source('tableau_ent_prd', 'historical_event_types') }}
 ),
 
-renamed1 AS (
+events AS (
     SELECT
         id AS hist_event_id,
-        historical_event_type_id,
+        historical_event_type_id AS hist_event_type_id,
         created_at AS hist_event_created_at,
+
         hist_actor_user_id,
         hist_target_user_id,
         hist_actor_site_id,
         hist_target_site_id,
+
         hist_project_id,
         hist_workbook_id,
         hist_view_id,
@@ -26,42 +28,46 @@ renamed1 AS (
         hist_tag_id,
         hist_group_id,
         hist_flow_id,
+
         pipeline_start_date
-    FROM source1
+    FROM source_events
 ),
 
-rename2 AS (
+event_types AS (
     SELECT
         type_id AS hist_event_type_id,
         name AS hist_event_name,
         action_type AS hist_event_action_type
-    FROM source2
-),
-
-joined_sources AS (
-    SELECT
-        r1.hist_event_id,
-        r1.historical_event_type_id,
-        r2.hist_event_name,
-        r2.hist_event_action_type,
-        r1.hist_event_created_at,
-        r1.hist_actor_user_id,
-        r1.hist_target_user_id,
-        r1.hist_actor_site_id,
-        r1.hist_target_site_id,
-        r1.hist_project_id,
-        r1.hist_workbook_id,
-        r1.hist_view_id,
-        r1.hist_datasource_id,
-        r1.hist_data_connection_id,
-        r1.hist_comment_id,
-        r1.hist_tag_id,
-        r1.hist_group_id,
-        r1.hist_flow_id,
-        r1.pipeline_start_date
-    FROM renamed1 r1
-    LEFT JOIN rename2 r2
-        ON r1.historical_event_type_id = r2.hist_event_type_id
+    FROM source_event_types
 )
 
-SELECT * FROM joined_sources
+SELECT
+    e.hist_event_id,
+    e.hist_event_type_id,
+    et.hist_event_name,
+    et.hist_event_action_type,
+
+    e.hist_event_created_at AS created_date_timestamp,
+    to_date(e.hist_event_created_at) AS created_date,
+
+    e.hist_actor_user_id,
+    e.hist_target_user_id,
+    e.hist_actor_site_id,
+    e.hist_target_site_id,
+
+    e.hist_project_id,
+    e.hist_workbook_id,
+    e.hist_view_id,
+    e.hist_datasource_id,
+    e.hist_data_connection_id,
+    e.hist_comment_id,
+    e.hist_tag_id,
+    e.hist_group_id,
+    e.hist_flow_id,
+
+    e.pipeline_start_date
+
+FROM events e
+LEFT JOIN event_types et
+    ON e.hist_event_type_id = et.hist_event_type_id
+--where datediff('day',to_date(e.hist_event_created_at),current_date())<=365 -- filter to only include events from the last 365 days

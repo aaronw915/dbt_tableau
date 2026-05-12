@@ -1,6 +1,7 @@
 WITH source1 AS (
     SELECT * FROM {{ source('tableau_ent_prd', 'workbooks') }}
 ),
+
 source2 AS (
     SELECT * FROM {{ source('tableau_ent_prd', 'hist_workbooks') }}
 ),
@@ -32,6 +33,7 @@ renamed2 AS (
         workbook_id
     FROM source2
 ),
+
 joined AS (
     SELECT
         r1.workbook_id,
@@ -53,6 +55,7 @@ joined AS (
         r2.hist_workbook_id
     FROM renamed1 r1
     LEFT JOIN renamed2 r2
-    ON r1.workbook_id = r2.workbook_id
+        ON r1.workbook_id = r2.workbook_id
 )
-select * from joined
+
+SELECT * FROM joined

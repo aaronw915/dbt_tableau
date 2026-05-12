@@ -7,6 +7,7 @@ renamed AS (
         id AS site_id,
         name AS site_name,
         url_namespace AS site_url_namespace,
+        to_date(created_at) AS site_created_date,
         pipeline_start_date
     FROM source
 )

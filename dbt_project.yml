@@ -15,13 +15,21 @@ clean-targets:
 
 models:
   tableau:
+
+    # Default materialization
     +materialized: view
 
     staging:
       +materialized: view
 
-    marts:
+    intermediate:
       +materialized: view
+
+    facts:
+      +materialized: view
+
+    marts:
+      +materialized: table
 
 seeds:
   tableau:

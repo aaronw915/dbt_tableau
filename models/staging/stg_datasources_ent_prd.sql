@@ -30,4 +30,5 @@ renamed AS (
         pipeline_start_date
     FROM source
 )
-select * from renamed
+
+SELECT * FROM renamed
